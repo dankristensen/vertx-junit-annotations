@@ -19,36 +19,41 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
+import org.vertx.java.core.AsyncResult;
 import org.vertx.java.core.Handler;
-
 
 /**
  * @author swilliams
- *
+ * 
  */
-public class DeploymentHandler implements Handler<String> {
+public class DeploymentHandler implements Handler<AsyncResult<String>> {
 
-  private final CountDownLatch latch;
+	private final CountDownLatch latch;
 
-  private final Set<String> deploymentIDs = new HashSet<>();
+	private final Set<String> deploymentIDs = new HashSet<>();
 
-  public DeploymentHandler(final CountDownLatch latch) {
-    this.latch = latch;
-  }
+	public DeploymentHandler(final CountDownLatch latch) {
+		this.latch = latch;
+	}
 
-  @Override
-  public void handle(String event) {
-    if (event != null) {
-      deploymentIDs.add(event);
-    }
-    latch.countDown();
-  }
+	public String getDeploymentID() {
+		if (deploymentIDs.size() == 0) {
+			return null;
+		}
+		return deploymentIDs.iterator().next();
+	}
 
-  public String getDeploymentID() {
-    if (deploymentIDs.size() == 0) {
-      return null;
-    }
-    return deploymentIDs.iterator().next();
-  }
+	@Override
+	public void handle(AsyncResult<String> event) {
+		if (event.succeeded()) {
+			if (event.result() != null) {
+				deploymentIDs.add(event.result());
+			}
+		} else {
+			throw new RuntimeException("Unable to deploy module/verticle",
+					event.cause());
+		}
+		latch.countDown();
+	}
 
 }

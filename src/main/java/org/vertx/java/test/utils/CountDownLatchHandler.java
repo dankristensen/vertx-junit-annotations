@@ -49,7 +49,7 @@ public class CountDownLatchHandler<T> implements Handler<Message<T>> {
 
   @Override
   public void handle(Message<T> event) {
-    boolean added = queue.offer(event.body);
+    boolean added = queue.offer(event.body());
     if (added) {
       latch.countDown();
     }

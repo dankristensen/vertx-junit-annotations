@@ -32,58 +32,64 @@ import org.vertx.java.test.utils.DeploymentUtils;
 
 /**
  * @author swilliams
- *
+ * 
  */
 public class JUnitDeploymentUtils {
 
-  /**
-   * @param manager
-   * @param description
-   * @return map
-   */
-  public static Map<Annotation, String> deploy(PlatformManager platformManager, File modDir, Description description, long timeout) {
+	/**
+	 * @param platformManager
+	 * @param description
+	 * @return map
+	 */
+	public static Map<Annotation, String> deploy(
+			PlatformManager platformManager, File modDir,
+			Description description, long timeout) {
 
-    Map<Annotation, String> deployments = new HashMap<>();
+		Map<Annotation, String> deployments = new HashMap<>();
 
-    // ------------------------------------------------------------------------------
-    // Discover and deploy verticles
-    Set<TestVerticle> verticles = new HashSet<>();
-    TestVerticle testVerticle = description.getAnnotation(TestVerticle.class);
-    if (testVerticle != null) {
-      verticles.add(testVerticle);
-    }
+		// ------------------------------------------------------------------------------
+		// Discover and deploy verticles
+		Set<TestVerticle> verticles = new HashSet<>();
+		TestVerticle testVerticle = description
+				.getAnnotation(TestVerticle.class);
+		if (testVerticle != null) {
+			verticles.add(testVerticle);
+		}
 
-    TestVerticles testVerticles = description.getAnnotation(TestVerticles.class);
-    if (testVerticles != null) {
-      for (TestVerticle v : testVerticles.value()) {
-        verticles.add(v);
-      }
-    }
+		TestVerticles testVerticles = description
+				.getAnnotation(TestVerticles.class);
+		if (testVerticles != null) {
+			for (TestVerticle v : testVerticles.value()) {
+				verticles.add(v);
+			}
+		}
 
-    Map<Annotation, String> verticleDeployments = DeploymentUtils.deployVerticles(platformManager, modDir, verticles, timeout);
-    deployments.putAll(verticleDeployments);
+		Map<Annotation, String> verticleDeployments = DeploymentUtils
+				.deployVerticles(platformManager, modDir, verticles, timeout);
+		deployments.putAll(verticleDeployments);
 
-    // ------------------------------------------------------------------------------
-    // Discover and deploy modules
-    Set<TestModule> modules = new HashSet<>();
-    TestModule testModule = description.getAnnotation(TestModule.class);
-    if (testModule != null) {
-      modules.add(testModule);
-    }
+		// ------------------------------------------------------------------------------
+		// Discover and deploy modules
+		Set<TestModule> modules = new HashSet<>();
+		TestModule testModule = description.getAnnotation(TestModule.class);
+		if (testModule != null) {
+			modules.add(testModule);
+		}
 
-    TestModules testModules = description.getAnnotation(TestModules.class);
-    if (testModules != null) {
-      for (TestModule v : testModules.value()) {
-        modules.add(v);
-      }
-    }
+		TestModules testModules = description.getAnnotation(TestModules.class);
+		if (testModules != null) {
+			for (TestModule v : testModules.value()) {
+				modules.add(v);
+			}
+		}
 
-    Map<Annotation, String> modulesDeployments = DeploymentUtils.deployModules(platformManager, modDir, modules, timeout);
-    deployments.putAll(modulesDeployments);
+		Map<Annotation, String> modulesDeployments = DeploymentUtils
+				.deployModules(platformManager, modDir, modules, timeout);
+		deployments.putAll(modulesDeployments);
 
-    // ------------------------------------------------------------------------------
-    // return result
-    return deployments;
-  }
+		// ------------------------------------------------------------------------------
+		// return result
+		return deployments;
+	}
 
 }

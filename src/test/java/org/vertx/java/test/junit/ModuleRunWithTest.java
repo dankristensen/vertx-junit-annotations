@@ -22,90 +22,90 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.vertx.java.test.TestModule;
 import org.vertx.java.test.TestModules;
+import org.vertx.java.test.VertxConfiguration;
 import org.vertx.java.test.VertxTestBase;
 import org.vertx.java.test.utils.QueueReplyHandler;
 
-
 /**
  * @author swilliams
- *
+ * 
  */
 @RunWith(VertxJUnit4ClassRunner.class)
-@TestModules({
-  @TestModule(name="test.echo0-v1.0")
-})
+@VertxConfiguration(modsDir = "src/test/mods")
+@TestModules({ @TestModule(name = "test~echo0~1.0") })
 public class ModuleRunWithTest extends VertxTestBase {
 
-  private long timeout = 10L;
+	private long timeout = 10L;
 
-  @Before
-  public void setup() {
-    this.timeout = Long.parseLong(System.getProperty("vertx.test.timeout", "15L"));
-  }
+	@Before
+	public void setup() {
+		this.timeout = Long.parseLong(System.getProperty("vertx.test.timeout",
+				"15"));
+	}
 
-  @Test
-  public void testModuleEcho0() {
+	@Test
+	public void testModuleEcho0() {
 
-    String QUESTION = "How now brown cow?";
+		String QUESTION = "How now brown cow?";
 
-    final LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<>();
+		final LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<>();
 
-    getVertx().eventBus().send("vertx.test.mods.echo0", QUESTION, new QueueReplyHandler<String>(queue, timeout));
-    
-    try {
-      String answer = queue.poll(timeout, TimeUnit.SECONDS);
-      System.out.println("answer: " + answer);
-      Assert.assertTrue(QUESTION.equals(answer));
+		getVertx().eventBus().send("vertx.test.mods.echo0", QUESTION,
+				new QueueReplyHandler<String>(queue, timeout));
 
-    } catch (InterruptedException e) {
-      Assert.fail(e.getMessage());
-    }
+		try {
+			String answer = queue.poll(timeout, TimeUnit.SECONDS);
+			System.out.println("answer: " + answer);
+			Assert.assertTrue(QUESTION.equals(answer));
 
-  }
+		} catch (InterruptedException e) {
+			Assert.fail(e.getMessage());
+		}
 
-  @Test
-  @TestModule(name="test.echo1-v1.0")
-  public void testModuleEcho1() {
-    String QUESTION = "Is it beer oclock yet?";
+	}
 
-    final LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<>();
+	@Test
+	@TestModule(name = "test~echo1~1.0")
+	public void testModuleEcho1() {
+		String QUESTION = "Is it beer oclock yet?";
 
-    getVertx().eventBus().send("vertx.test.mods.echo1", QUESTION, new QueueReplyHandler<String>(queue, timeout));
-    
-    try {
-      String answer = queue.poll(timeout, TimeUnit.SECONDS);
-      System.out.println("answer: " + answer);
-      Assert.assertTrue(QUESTION.equals(answer));
+		final LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<>();
 
-    } catch (InterruptedException e) {
-      Assert.fail(e.getMessage());
-    }
+		getVertx().eventBus().send("vertx.test.mods.echo1", QUESTION,
+				new QueueReplyHandler<String>(queue, timeout));
 
-  }
+		try {
+			String answer = queue.poll(timeout, TimeUnit.SECONDS);
+			System.out.println("answer: " + answer);
+			Assert.assertTrue(QUESTION.equals(answer));
 
-  @Test
-  @TestModules({
-    @TestModule(name="test.echo2-v1.0")
-  })
-  public void testModulesEcho2() {
-    String QUESTION = "What ho!";
+		} catch (InterruptedException e) {
+			Assert.fail(e.getMessage());
+		}
 
-    final LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<>();
+	}
 
-    getVertx().eventBus().send("vertx.test.mods.echo2", QUESTION, new QueueReplyHandler<String>(queue, timeout));
-    
-    try {
-      String answer = queue.poll(timeout, TimeUnit.SECONDS);
-      System.out.println("answer: " + answer);
-      Assert.assertTrue(QUESTION.equals(answer));
+	@Test
+	@TestModules({ @TestModule(name = "test~echo2~1.0") })
+	public void testModulesEcho2() {
+		String QUESTION = "What ho!";
 
-    } catch (InterruptedException e) {
-      Assert.fail(e.getMessage());
-    }
+		final LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<>();
 
-  }
+		getVertx().eventBus().send("vertx.test.mods.echo2", QUESTION,
+				new QueueReplyHandler<String>(queue, timeout));
+
+		try {
+			String answer = queue.poll(timeout, TimeUnit.SECONDS);
+			System.out.println("answer: " + answer);
+			Assert.assertTrue(QUESTION.equals(answer));
+
+		} catch (InterruptedException e) {
+			Assert.fail(e.getMessage());
+		}
+
+	}
 
 }

@@ -27,35 +27,35 @@ import org.vertx.java.test.VertxConfiguration;
 @VertxConfiguration
 public class SimpleTestBusModTest extends Verticle {
 
-  private boolean started;
+	private boolean started;
 
-  @Override
-  public void start() throws Exception {
-    System.out.println("verticle.start");
-    this.started = true;
-  }
+	@Override
+	public void start() {
+		System.out.println("verticle.start");
+		this.started = true;
+	}
 
-  @Before
-  public void before() throws Exception {
-    System.out.println("verticle.before");
-    Assert.assertTrue(started);
-  }
+	@Before
+	public void before() throws Exception {
+		System.out.println("verticle.before");
+		Assert.assertTrue(started);
+	}
 
-  @Test
-  public void test() throws Exception {
-    System.out.println("verticle.test");
-  }
+	@Test
+	public void test() throws Exception {
+		System.out.println("verticle.test");
+	}
 
-  @After
-  public void after() throws Exception {
-    System.out.println("verticle.after");
-  }
+	@After
+	public void after() throws Exception {
+		System.out.println("verticle.after");
+	}
 
-  @Override
-  public void stop() throws Exception {
-    System.out.println("verticle.stop");
-    this.started = false;
-    super.stop();
-  }
+	@Override
+	public void stop() {
+		System.out.println("verticle.stop");
+		this.started = false;
+		super.stop();
+	}
 
 }

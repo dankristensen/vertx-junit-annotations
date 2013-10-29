@@ -17,6 +17,7 @@
 apply plugin: 'java'
 apply from: 'gradle/setup.gradle'
 apply from: 'gradle/maven.gradle'
+apply plugin: 'eclipse'
 
 defaultTasks = ['assemble']
 
@@ -35,8 +36,8 @@ dependencies {
   compile "io.vertx:vertx-platform:$vertxVersion"
 
 //  testCompile "io.vertx:lang-java:$vertxVersion"
-  testCompile "io.vertx:lang-rhino:1.0.0-SNAPSHOT"
-  testCompile "org.mozilla:rhino:$rhinoVersion"
+//  testCompile "io.vertx:lang-rhino:1.0.0-SNAPSHOT"
+//  testCompile "org.mozilla:rhino:$rhinoVersion"
 }
 
 test {

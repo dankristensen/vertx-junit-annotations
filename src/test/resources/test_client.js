@@ -15,7 +15,7 @@
  */
 
 load('test_utils.js')
-load('vertx.js')
+var vertx = require('vertx.js')
 
 var tu = new TestUtils();
 var eb = vertx.eventBus;

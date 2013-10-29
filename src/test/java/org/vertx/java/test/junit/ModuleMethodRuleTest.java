@@ -22,77 +22,86 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
 import org.vertx.java.platform.PlatformManager;
 import org.vertx.java.platform.impl.DefaultPlatformManagerFactory;
 import org.vertx.java.test.TestModule;
 import org.vertx.java.test.TestModules;
 import org.vertx.java.test.utils.QueueReplyHandler;
 
-
 /**
  * @author swilliams
- *
+ * 
  */
+
 public class ModuleMethodRuleTest {
 
-  private final PlatformManager manager = new DefaultPlatformManagerFactory().createPlatformManager();
+	static {
+		System.setProperty("vertx.mods", "src/test/mods");
+	}
 
-  @Rule
-  public VertxExternalResource rule = new VertxExternalResource(manager);
+	private final PlatformManager manager = new DefaultPlatformManagerFactory()
+			.createPlatformManager();
 
-  private long timeout = 10L;
+	@Rule
+	public VertxExternalResource rule = new VertxExternalResource(manager);
 
-  @Before
-  public void setup() {
-    this.timeout = Long.parseLong(System.getProperty("vertx.test.timeout", "15L"));
-    try {
-      Thread.sleep(1000L); // FIXME this sucks
-    } catch (InterruptedException e) {
-      //
-    }
-  }
+	private long timeout = 10L;
 
-  @Test
-  @TestModule(name="test.echo1-v1.0")
-  public void testModuleEcho1() {
-    String QUESTION = "Is it beer oclock yet?";
+	@Before
+	public void setup() {
+		this.timeout = Long.parseLong(System.getProperty("vertx.test.timeout",
+				"15"));
+		try {
+			Thread.sleep(1000L); // FIXME this sucks
+		} catch (InterruptedException e) {
+			//
+		}
+	}
 
-    final LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<>();
+	@Test
+	@TestModule(name = "test~echo1~1.0")
+	public void testModuleEcho1() {
+		String QUESTION = "Is it beer oclock yet?";
 
-    manager.getVertx().eventBus().send("vertx.test.mods.echo1", QUESTION, new QueueReplyHandler<String>(queue, timeout));
+		final LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<>();
 
-    try {
-      String answer = queue.poll(timeout, TimeUnit.SECONDS);
-      System.out.println("answer: " + answer);
-      Assert.assertTrue(QUESTION.equals(answer));
+		manager.vertx()
+				.eventBus()
+				.send("vertx.test.mods.echo1", QUESTION,
+						new QueueReplyHandler<String>(queue, timeout));
 
-    } catch (InterruptedException e) {
-      Assert.fail(e.getMessage());
-    }
+		try {
+			String answer = queue.poll(timeout, TimeUnit.SECONDS);
+			System.out.println("answer: " + answer);
+			Assert.assertTrue(QUESTION.equals(answer));
 
-  }
+		} catch (InterruptedException e) {
+			Assert.fail(e.getMessage());
+		}
 
-  @Test
-  @TestModules({
-    @TestModule(name="test.echo2-v1.0")
-  })
-  public void testModulesEcho2() {
-    String QUESTION = "What ho!";
+	}
 
-    final LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<>();
+	@Test
+	@TestModules({ @TestModule(name = "test~echo2~1.0") })
+	public void testModulesEcho2() {
+		String QUESTION = "What ho!";
 
-    manager.getVertx().eventBus().send("vertx.test.mods.echo2", QUESTION, new QueueReplyHandler<String>(queue, timeout));
+		final LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<>();
 
-    try {
-      String answer = queue.poll(timeout, TimeUnit.SECONDS);
-      System.out.println("answer: " + answer);
-      Assert.assertTrue(QUESTION.equals(answer));
+		manager.vertx()
+				.eventBus()
+				.send("vertx.test.mods.echo2", QUESTION,
+						new QueueReplyHandler<String>(queue, timeout));
 
-    } catch (InterruptedException e) {
-      Assert.fail(e.getMessage());
-    }
+		try {
+			String answer = queue.poll(timeout, TimeUnit.SECONDS);
+			System.out.println("answer: " + answer);
+			Assert.assertTrue(QUESTION.equals(answer));
 
-  }
+		} catch (InterruptedException e) {
+			Assert.fail(e.getMessage());
+		}
+
+	}
 
 }

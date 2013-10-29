@@ -22,7 +22,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
 import org.vertx.java.core.Vertx;
 import org.vertx.java.platform.PlatformManager;
 import org.vertx.java.platform.impl.DefaultPlatformManagerFactory;
@@ -32,69 +31,72 @@ import org.vertx.java.test.utils.QueueReplyHandler;
 
 /**
  * @author swilliams
- *
+ * 
  */
+
 public class VerticleMethodRuleTest {
 
-  private final PlatformManager manager = new DefaultPlatformManagerFactory().createPlatformManager();
+	private final PlatformManager manager = new DefaultPlatformManagerFactory()
+			.createPlatformManager();
 
-  @Rule
-  public VertxExternalResource rule = new VertxExternalResource(manager);
+	@Rule
+	public VertxExternalResource rule = new VertxExternalResource(manager);
 
-  private long timeout = 10L;
+	private long timeout = 10L;
 
-  public Vertx getVertx() {
-    return manager.getVertx();
-  }
+	public Vertx getVertx() {
+		return manager.vertx();
+	}
 
-  @Before
-  public void setup() {
-    this.timeout = Long.parseLong(System.getProperty("vertx.test.timeout", "15L"));
-    try {
-      Thread.sleep(1000L); // FIXME this sucks
-    } catch (InterruptedException e) {
-      //
-    }
-  }
+	@Before
+	public void setup() {
+		this.timeout = Long.parseLong(System.getProperty("vertx.test.timeout",
+				"15"));
+		try {
+			Thread.sleep(1000L); // FIXME this sucks
+		} catch (InterruptedException e) {
+			//
+		}
+	}
 
-  @Test
-  @TestVerticle(main="test_verticle1.js")
-  public void testVerticle1() {
-    String QUESTION = "Oh no. Not penalties again...";
+	@Test
+	@TestVerticle(main = "test_verticle1.js")
+	public void testVerticle1() {
+		String QUESTION = "Oh no. Not penalties again...";
 
-    final LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<>();
+		final LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<>();
 
-    getVertx().eventBus().send("vertx.test.echo1", QUESTION, new QueueReplyHandler<String>(queue, timeout));
-    
-    try {
-      String answer = queue.poll(timeout, TimeUnit.SECONDS);
-      System.out.println("answer: " + answer);
-      Assert.assertTrue(QUESTION.equals(answer));
+		getVertx().eventBus().send("vertx.test.echo1", QUESTION,
+				new QueueReplyHandler<String>(queue, timeout));
 
-    } catch (InterruptedException e) {
-      //
-    }
-  }
+		try {
+			String answer = queue.poll(timeout, TimeUnit.SECONDS);
+			System.out.println("answer: " + answer);
+			Assert.assertTrue(QUESTION.equals(answer));
 
-  @Test
-  @TestVerticles({
-    @TestVerticle(main="test_verticle2.js")
-  })
-  public void testVerticles2() {
-    String QUESTION = "Smashing fun, what!";
+		} catch (InterruptedException e) {
+			//
+		}
+	}
 
-    final LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<>();
+	@Test
+	@TestVerticles({ @TestVerticle(main = "test_verticle2.js") })
+	public void testVerticles2() {
+		String QUESTION = "Smashing fun, what!";
 
-    getVertx().eventBus().send("vertx.test.echo2", QUESTION, new QueueReplyHandler<String>(queue, timeout));
-    
-    try {
-      String answer = queue.poll(timeout, TimeUnit.SECONDS);
-      System.out.println("answer: " + answer);
-      Assert.assertTrue(QUESTION.equals(answer));
+		final LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<>();
 
-    } catch (InterruptedException e) {
-      //
-    }
-  }
+		getVertx().eventBus().send("vertx.test.echo2", QUESTION,
+				new QueueReplyHandler<String>(queue, timeout));
+
+		try {
+			String answer = queue.poll(timeout, TimeUnit.SECONDS);
+			System.out.println("answer: " + answer);
+			Assert.assertTrue(QUESTION.equals(answer));
+
+		} catch (InterruptedException e) {
+			//
+		}
+	}
 
 }

@@ -28,63 +28,64 @@ import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.test.VertxAware;
 import org.vertx.java.test.utils.QueueReplyHandler;
 
-
 /**
  * @author swilliams
- *
+ * 
  */
 @RunWith(VertxJUnit4ClassRunner.class)
 public class SimpleEchoTest implements VertxAware {
 
-  private static final String QUESTION = "Hello World";
+	private static final String QUESTION = "Hello World";
 
-  private static final String TEST_ADDRESS = "vertx.test.echo";
+	private static final String TEST_ADDRESS = "vertx.test.echo";
 
-  private Vertx vertx;
+	private Vertx vertx;
 
-  @Override
-  public void setVertx(Vertx vertx) {
-    this.vertx = vertx;
-  }
+	@Override
+	public void setVertx(Vertx vertx) {
+		this.vertx = vertx;
+	}
 
-  @Before
-  public void setup() {
-    Assert.assertNotNull(vertx);
+	@Before
+	public void setup() {
+		Assert.assertNotNull(vertx);
 
-    vertx.eventBus().registerHandler(TEST_ADDRESS, new Handler<Message<String>>() {
-      @Override
-      public void handle(Message<String> event) {
-        if (QUESTION.equals(event.body)) {
-          event.reply(event.body);
-        }
-        else {
-          event.reply("huh?");
-        }
-      }});
-    
-    try {
-      Thread.sleep(1000L); // FIXME this sucks
-    } catch (InterruptedException e) {
-      //
-    }
-  }
+		vertx.eventBus().registerHandler(TEST_ADDRESS,
+				new Handler<Message<String>>() {
+					@Override
+					public void handle(Message<String> event) {
+						if (QUESTION.equals(event.body())) {
+							event.reply(event.body());
+						} else {
+							event.reply("huh?");
+						}
+					}
+				});
 
-  @Test
-  public void test() {
+		try {
+			Thread.sleep(1000L); // FIXME this sucks
+		} catch (InterruptedException e) {
+			//
+		}
+	}
 
-    final long timeout = 10L;
-    final LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<>();
+	@Test
+	public void test() {
 
-    vertx.eventBus().send(TEST_ADDRESS, QUESTION, new QueueReplyHandler<String>(queue, timeout));
+		final long timeout = 10L;
+		final LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<>();
 
-    try {
-      String answer = queue.poll(timeout, TimeUnit.SECONDS);
-      System.out.println("answer: " + answer);
-      Assert.assertTrue(QUESTION.equals(answer));
+		vertx.eventBus().send(TEST_ADDRESS, QUESTION,
+				new QueueReplyHandler<String>(queue, timeout));
 
-    } catch (InterruptedException e) {
-      //
-    }
-  }
+		try {
+			String answer = queue.poll(timeout, TimeUnit.SECONDS);
+			System.out.println("answer: " + answer);
+			Assert.assertTrue(QUESTION.equals(answer));
+
+		} catch (InterruptedException e) {
+			//
+		}
+	}
 
 }

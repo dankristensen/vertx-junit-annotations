@@ -102,8 +102,8 @@ public class VertxJUnit4ClassRunner extends JUnit4ClassRunnerAdapter {
 
     if (target instanceof Verticle) {
       this.verticle = (Verticle) target;
-      verticle.setVertx(platformManager.getVertx());
-      verticle.setContainer(new Container((PlatformManagerInternal) platformManager));
+      verticle.setVertx(platformManager.vertx());
+//      verticle.setContainer(new Container((PlatformManagerInternal) platformManager));
       try {
         System.out.println("Starting test verticle!");
         verticle.start();
@@ -116,7 +116,7 @@ public class VertxJUnit4ClassRunner extends JUnit4ClassRunnerAdapter {
   @Override
   protected void injectResources(Object target) {
     if ((configuration != null && configuration.injectResources()) || configuration == null) {
-      InjectionUtils.inject(platformManager.getVertx(), target);
+      InjectionUtils.inject(platformManager.vertx(), target);
       InjectionUtils.inject(platformManager, target);
     }
   }

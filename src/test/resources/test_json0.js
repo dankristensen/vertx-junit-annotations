@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-load('vertx.js')
+var vertx = require('vertx.js')
+var container = require('vertx/container');
 
 var eb = vertx.eventBus;
-
 var address = 'vertx.test.echo0';
 
 eb.registerHandler(address, function(msg, reply) {
-  reply(vertx.config.foo);
+  reply(container.config.foo);
 });

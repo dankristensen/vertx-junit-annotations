@@ -17,24 +17,24 @@ package org.vertx.java.test.utils;
 
 import java.util.concurrent.CountDownLatch;
 
+import org.vertx.java.core.AsyncResult;
 import org.vertx.java.core.Handler;
-
 
 /**
  * @author swilliams
- *
+ * 
  */
-public class CountDownLatchDoneHandler<T> implements Handler<T> {
+public class CountDownLatchDoneHandler<T> implements Handler<AsyncResult<T>> {
 
-  private final CountDownLatch latch;
+	private final CountDownLatch latch;
 
-  public CountDownLatchDoneHandler(final CountDownLatch latch) {
-    this.latch = latch;
-  }
+	public CountDownLatchDoneHandler(final CountDownLatch latch) {
+		this.latch = latch;
+	}
 
-  @Override
-  public void handle(T event) {
-    latch.countDown();
-  }
+	@Override
+	public void handle(AsyncResult<T> event) {
+		latch.countDown();
+	}
 
 }

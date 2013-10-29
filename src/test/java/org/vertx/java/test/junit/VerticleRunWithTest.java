@@ -22,84 +22,84 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.vertx.java.test.TestVerticle;
 import org.vertx.java.test.TestVerticles;
 import org.vertx.java.test.VertxTestBase;
 import org.vertx.java.test.utils.QueueReplyHandler;
 
-
 /**
  * @author swilliams
- *
+ * 
  */
 @RunWith(VertxJUnit4ClassRunner.class)
-@TestVerticle(main="test_verticle0.js")
+@TestVerticle(main = "test_verticle0.js")
 public class VerticleRunWithTest extends VertxTestBase {
 
-  private long timeout = 10L;
+	private long timeout = 10L;
 
-  @Before
-  public void setup() {
-    this.timeout = Long.parseLong(System.getProperty("vertx.test.timeout", "15L"));
-  }
+	@Before
+	public void setup() {
+		this.timeout = Long.parseLong(System.getProperty("vertx.test.timeout",
+				"15"));
+	}
 
-  @Test
-  public void testVerticle0() {
-    String QUESTION = "I say, anyone for cricket?";
+	@Test
+	public void testVerticle0() {
+		String QUESTION = "I say, anyone for cricket?";
 
-    final LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<>();
+		final LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<>();
 
-    getVertx().eventBus().send("vertx.test.echo0", QUESTION, new QueueReplyHandler<String>(queue, timeout));
-    
-    try {
-      String answer = queue.poll(timeout, TimeUnit.SECONDS);
-      System.out.println("answer: " + answer);
-      Assert.assertTrue(QUESTION.equals(answer));
+		getVertx().eventBus().send("vertx.test.echo0", QUESTION,
+				new QueueReplyHandler<String>(queue, timeout));
 
-    } catch (InterruptedException e) {
-      //
-    }
-  }
+		try {
+			String answer = queue.poll(timeout, TimeUnit.SECONDS);
+			System.out.println("answer: " + answer);
+			Assert.assertTrue(QUESTION.equals(answer));
 
-  @Test
-  @TestVerticle(main="test_verticle1.js")
-  public void testVerticle1() {
-    String QUESTION = "Oh no. Not penalties again...";
+		} catch (InterruptedException e) {
+			//
+		}
+	}
 
-    final LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<>();
+	@Test
+	@TestVerticle(main = "test_verticle1.js")
+	public void testVerticle1() {
+		String QUESTION = "Oh no. Not penalties again...";
 
-    getVertx().eventBus().send("vertx.test.echo1", QUESTION, new QueueReplyHandler<String>(queue, timeout));
-    
-    try {
-      String answer = queue.poll(timeout, TimeUnit.SECONDS);
-      System.out.println("answer: " + answer);
-      Assert.assertTrue(QUESTION.equals(answer));
+		final LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<>();
 
-    } catch (InterruptedException e) {
-      //
-    }
-  }
+		getVertx().eventBus().send("vertx.test.echo1", QUESTION,
+				new QueueReplyHandler<String>(queue, timeout));
 
-  @Test
-  @TestVerticles({
-    @TestVerticle(main="test_verticle2.js")
-  })
-  public void testVerticles2() {
-    String QUESTION = "Smashing fun, what!";
+		try {
+			String answer = queue.poll(timeout, TimeUnit.SECONDS);
+			System.out.println("answer: " + answer);
+			Assert.assertTrue(QUESTION.equals(answer));
 
-    final LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<>();
+		} catch (InterruptedException e) {
+			//
+		}
+	}
 
-    getVertx().eventBus().send("vertx.test.echo2", QUESTION, new QueueReplyHandler<String>(queue, timeout));
-    
-    try {
-      String answer = queue.poll(timeout, TimeUnit.SECONDS);
-      System.out.println("answer: " + answer);
-      Assert.assertTrue(QUESTION.equals(answer));
+	@Test
+	@TestVerticles({ @TestVerticle(main = "test_verticle2.js") })
+	public void testVerticles2() {
+		String QUESTION = "Smashing fun, what!";
 
-    } catch (InterruptedException e) {
-      //
-    }
-  }
+		final LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<>();
+
+		getVertx().eventBus().send("vertx.test.echo2", QUESTION,
+				new QueueReplyHandler<String>(queue, timeout));
+
+		try {
+			String answer = queue.poll(timeout, TimeUnit.SECONDS);
+			System.out.println("answer: " + answer);
+			Assert.assertTrue(QUESTION.equals(answer));
+
+		} catch (InterruptedException e) {
+			//
+		}
+	}
 
 }
